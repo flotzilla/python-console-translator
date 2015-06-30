@@ -55,5 +55,5 @@ if len(sys.argv) > 1:
         text += sys.argv[i] + " "
 
     get_translate(text, to_lang(text))
-elif len(sys.argv) == 0:
+elif len(sys.argv) == 1:
     print("Nothing to translate")
