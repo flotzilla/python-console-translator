@@ -9,9 +9,9 @@ Add execution permissions for script with
 
 And run with `python3 yndxt.py your sentence for translating`
 
-You can add alias for bash
+**You can add alias for bash**
 
-*In your `.bashrc` file add line like*
+In your `.bashrc` file add line like
 
 `alias ytr="python3 /home/user_name/yndxt/yndxt.py`
 
