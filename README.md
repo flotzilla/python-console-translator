@@ -1,4 +1,4 @@
-Python 3 console translater
+Python 3 console translator
 -----
 Translate text from english language to russian and backwards using Yandex translator. The language will be detected automatically.
 
