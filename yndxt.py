@@ -1,11 +1,13 @@
 from http.client import HTTPSConnection
 from http.client import HTTPException
 from urllib.parse import quote
+from os.path import expanduser
 import simplejson
 import sys
 
 
 def get_translate(searching_text, to_language):
+
     try:
         quoted_text = quote(u"" + searching_text + "")
         req = '/api/v1.5/tr.json/translate?' \
@@ -25,6 +27,7 @@ def get_translate(searching_text, to_language):
             j = simplejson.loads(ddata, )
             tr_text = ''.join(j['text'])
             print(tr_text)
+            return tr_text
         else:
             print("Something is wrong: " + str(rez.status) + " status code")
             print(data)
@@ -46,6 +49,12 @@ def to_lang(txt):
     else:
         return "ru"
 
+
+def save_to_file(word, tr_word):
+    with open(expanduser("~") + "/ytr-words.txt", "a") as file:
+        file.write(word + " - " + tr_word + "\n")
+        file.close()
+
 # Start is here
 if len(sys.argv) > 1:
     text = ""
@@ -54,6 +63,11 @@ if len(sys.argv) > 1:
     for i in range(1, max_i):
         text += sys.argv[i] + " "
 
-    get_translate(text, to_lang(text))
+    to_lang = to_lang(text)
+    translation = get_translate(text, to_lang)
+    if to_lang == "ru":
+        save_to_file(text, translation)
+    elif to_lang == "en":
+        save_to_file(translation, text)
 elif len(sys.argv) == 1:
     print("Nothing to translate")
