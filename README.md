@@ -21,4 +21,4 @@ and than run
 
 Now run script with `ytr your sentence for translating`
 
-Also, save translation result to `/home/user_name/ytr-words.txt` file
+Also, saves translation result to `/home/user_name/ytr-words.txt` file
