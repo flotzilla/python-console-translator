@@ -36,7 +36,7 @@ def get_translate(searching_text, to_language):
         print(err)
 
 
-def to_lang(txt):
+def determine_lang(txt):
     is_rus = False
     char = hex(ord(txt[0]))
     for k in range(0x0400, 0x04FF + 1):
@@ -63,7 +63,7 @@ if len(sys.argv) > 1:
     for i in range(1, max_i):
         text += sys.argv[i] + " "
 
-    to_lang = to_lang(text)
+    to_lang = determine_lang(text)
     translation = get_translate(text, to_lang)
     if to_lang == "ru":
         save_to_file(text, translation)
