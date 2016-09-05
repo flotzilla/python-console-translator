@@ -1,13 +1,15 @@
 from http.client import HTTPSConnection
 from http.client import HTTPException
 from urllib.parse import quote
-from os.path import expanduser
 import simplejson
 import sys
+import os
+
+custom_save_path = "custom User Path"
+is_save_to_file = True
 
 
 def get_translate(searching_text, to_language):
-
     try:
         quoted_text = quote(u"" + searching_text + "")
         req = '/api/v1.5/tr.json/translate?' \
@@ -51,9 +53,14 @@ def determine_lang(txt):
 
 
 def save_to_file(word, tr_word):
-    with open(expanduser("~") + "/ytr-words.txt", "a") as file:
+    path = os.path.expanduser("~")
+    if custom_save_path != False and os.path.exists(custom_save_path):
+        path = custom_save_path
+
+    with open(path + "/ytr-words.txt", "a") as file:
         file.write(word + " - " + tr_word + "\n")
         file.close()
+
 
 # Start is here
 if len(sys.argv) > 1:
@@ -65,9 +72,12 @@ if len(sys.argv) > 1:
 
     to_lang = determine_lang(text)
     translation = get_translate(text, to_lang)
-    if to_lang == "ru":
-        save_to_file(text, translation)
-    elif to_lang == "en":
-        save_to_file(translation, text)
+
+    if is_save_to_file:
+        if to_lang == "ru":
+            save_to_file(text, translation)
+        elif to_lang == "en":
+            save_to_file(translation, text)
+
 elif len(sys.argv) == 1:
     print("Nothing to translate")
