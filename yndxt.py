@@ -5,7 +5,7 @@ import simplejson
 import sys
 import os
 
-custom_save_path = "custom User Path"
+custom_save_path = "/home/bbyte/SpiderOak Hive"
 is_save_to_file = True
 
 
@@ -67,17 +67,20 @@ if len(sys.argv) > 1:
     text = ""
     max_i = len(sys.argv)
 
-    for i in range(1, max_i):
-        text += sys.argv[i] + " "
+    if sys.argv[1] == '-i':
+        print("interactive mode")
+    else:
+        for i in range(1, max_i):
+            text += sys.argv[i] + " "
 
-    to_lang = determine_lang(text)
-    translation = get_translate(text, to_lang)
+        to_lang = determine_lang(text)
+        translation = get_translate(text, to_lang)
 
-    if is_save_to_file:
-        if to_lang == "ru":
-            save_to_file(text, translation)
-        elif to_lang == "en":
-            save_to_file(translation, text)
+        if is_save_to_file:
+            if to_lang == "ru":
+                save_to_file(text, translation)
+            elif to_lang == "en":
+                save_to_file(translation, text)
 
 elif len(sys.argv) == 1:
     print("Nothing to translate")
