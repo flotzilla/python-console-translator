@@ -1,73 +1,35 @@
-from http.client import HTTPSConnection
-from http.client import HTTPException
-from urllib.parse import quote
-from os.path import expanduser
-import simplejson
 import sys
 
+from src.Translator import Translator
+from src.System import System
+from src.Interactive import Interactive
 
-def get_translate(searching_text, to_language):
+system = System('config/settings.conf')
+translator = Translator()
 
-    try:
-        quoted_text = quote(u"" + searching_text + "")
-        req = '/api/v1.5/tr.json/translate?' \
-              'key=trnsl.1.1.20150629T151613Z.82119cbb3415f490.ba44aa922a8b28e549144e0e2fa6249c7508358e' \
-              '&text=' + quoted_text \
-              + "&lang=" + to_language \
-              + '&options=1'
-
-        conn = HTTPSConnection('translate.yandex.net')
-        conn.request("GET", req)
-        rez = conn.getresponse()
-        data = rez.read()
-        conn.close()
-
-        if rez.status == 200:
-            ddata = data.decode("utf-8")
-            j = simplejson.loads(ddata, )
-            tr_text = ''.join(j['text'])
-            print(tr_text)
-            return tr_text
-        else:
-            print("Something is wrong: " + str(rez.status) + " status code")
-            print(data)
-
-    except HTTPException as err:
-        print(err)
-
-
-def determine_lang(txt):
-    is_rus = False
-    char = hex(ord(txt[0]))
-    for k in range(0x0400, 0x04FF + 1):
-        if char == hex(k):
-            is_rus = True
-            break
-
-    if is_rus:
-        return "en"
-    else:
-        return "ru"
-
-
-def save_to_file(word, tr_word):
-    with open(expanduser("~") + "/ytr-words.txt", "a") as file:
-        file.write(word + " - " + tr_word + "\n")
-        file.close()
-
-# Start is here
+# Read input params
 if len(sys.argv) > 1:
-    text = ""
-    max_i = len(sys.argv)
 
-    for i in range(1, max_i):
-        text += sys.argv[i] + " "
+    # if you wanna to enter to interactive mode
+    if sys.argv[1] == '-i':
+        print("interactive mode")
 
-    to_lang = determine_lang(text)
-    translation = get_translate(text, to_lang)
-    if to_lang == "ru":
-        save_to_file(text, translation)
-    elif to_lang == "en":
-        save_to_file(translation, text)
+    # just translate one sentence
+    else:
+        max_i = len(sys.argv)
+        text = ""
+
+        for i in range(1, max_i):
+            text += sys.argv[i] + " "
+
+        to_lang = translator.determine_lang(text)
+        translation = translator.get_yandex_translate(text, to_lang)
+
+        if system.is_save_to_file:
+            if to_lang == "ru":
+                system.save_to_file(text, translation)
+            elif to_lang == "en":
+                system.save_to_file(translation, text)
+
 elif len(sys.argv) == 1:
     print("Nothing to translate")
