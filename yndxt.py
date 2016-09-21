@@ -1,10 +1,11 @@
 import sys
+import os
 
 from src.Translator import Translator
 from src.System import System
-from src.Interactive import Interactive
 
-system = System('config/settings.conf')
+system = System(os.path.join(os.path.dirname(os.path.realpath(__file__)),
+                             'config/settings.conf'))
 translator = Translator()
 
 # Read input params

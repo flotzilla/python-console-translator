@@ -46,7 +46,11 @@ class System:
         if os.path.exists(self.save_path):
             path = self.save_path
 
-        with open(path + "/" + self.file_name, "a") as file:
-            file.write(word + " - " + tr_word + "\n")
-            file.close()
+        try:
+            with open(os.path.join(path, self.file_name), "a") as file:
+                file.write(word + " - " + tr_word + "\n")
+                file.close()
+        except IOError:
+            print("Cannot save to file")
+
 
